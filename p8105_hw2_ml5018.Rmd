@@ -124,3 +124,14 @@ The file “unemployment” contains 68 observations of 13 variables:
 * Nov: percentage of unemployment in November of the associated year
 * Dec: percentage of unemployment in December of the associated year
 
+Using the code chunk below to further describe the resulting dataset:
+
+```{r describe}
+skimr::skim(problem1_df)
+```
+
+The merged dataset contains `r dim(problem1_df)[1]` observations of `r dim(problem1_df)[2]` variables.
+
+The variable `year` included in this dataset ranges from `r range(problem1_df$year)[1]` to `r range(problem1_df$year)[2]`.
+
+The names of some key variables in the dataset include: `r names(problem1_df)`.
