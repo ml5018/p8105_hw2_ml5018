@@ -198,3 +198,21 @@ problem2_df =
   full_join(gwynnda_df)
 ```
 
+## describe the dataset
+
+Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in the resulting dataset, and give examples of key variables. For available data, what was the total weight of trash collected by Professor Trash Wheel? What was the total number of cigarette butts collected by Gwynnda in July of 2021?
+
+Apply the code below to take a brief view at the dataset.
+
+```{r describe_2}
+skimr::skim(problem2_df)
+```
+
+The resulting dataset consists of `r nrow(problem2_df)` observations of `r ncol(problem2_df)` variables.
+
+The key variables in the dataset include: `r names(problem2_df)`.
+
+For available data, the total weight of trash collected by Professor Trash Wheel is `r sum(pull(filter(problem2_df, trash_wheel == "professor"),5))` tons.
+
+And the total number of cigarette butts collected by Gwynnda in July of 2021 is `r sum(pull(filter(problem2_df, year == 2021, month == "July", trash_wheel == "gwynnda"), 9))`.
+
