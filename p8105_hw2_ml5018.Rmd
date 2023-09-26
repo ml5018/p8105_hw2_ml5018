@@ -30,3 +30,20 @@ pols_month_df =
   select(-prez_dem, -prez_gop,-day)
 ```
 
+## snp
+
+Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that `year` and `month` are the leading columns.
+
+```{r snp}
+snp_df = 
+  read_csv("fivethirtyeight_datasets/snp.csv") |>
+  janitor::clean_names() |>
+  separate(date, into = c("month", "day", "year"), sep = "/") |>
+  mutate(month = month.name[as.numeric(month)],
+         year = as.numeric(year),
+         year = case_when(year >= 23 ~ year + 1900,
+                          year <  23 ~ year + 2000)) |>
+  arrange(year, month) |>
+  select(year, month, everything())
+```
+
