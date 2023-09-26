@@ -41,10 +41,9 @@ snp_df =
   separate(date, into = c("month", "day", "year"), sep = "/") |>
   mutate(month = month.name[as.numeric(month)],
          year = as.numeric(year),
-         year = case_when(year >= 23 ~ year + 1900,
-                          year <  23 ~ year + 2000)) |>
-  arrange(year, month) |>
-  select(year, month, everything())
+         year = as.character(case_when(year >= 23 ~ year + 1900,
+                          year <  23 ~ year + 2000))) |>
+  arrange(year, month)
 ```
 
 ## unemployment
@@ -58,7 +57,8 @@ unemployment_df =
   pivot_longer(jan:dec, 
                names_to = "month", 
                values_to = "percentage_of_unemployment") |>
-  mutate(month = recode(month,
+  mutate(year = as.character(year),
+         month = recode(month,
                         jan = "January",
                         feb = "February",
                         mar = "March",
@@ -74,4 +74,16 @@ unemployment_df =
                         )
          )
 ```
+
+## join datasets
+
+Join the datasets by merging `snp` into `pols`, and merging `unemployment` into the result.
+
+```{r join}
+problem1_df = 
+  left_join(pols_month_df, snp_df) |>
+  left_join(unemployment_df)
+```
+
+
 
