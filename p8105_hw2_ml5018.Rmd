@@ -345,3 +345,9 @@ write_csv(innerjoin_df, "mci_combined.csv")
 ```
 
 The resulting dataset consists of `r nrow(innerjoin_df)` observations of `r ncol(innerjoin_df)` variables. The key variables include `r names(innerjoin_df)`.
+
+Further descriptive information can be obtained using the code chunk below.
+
+```{r describe_3}
+skimr::skim(innerjoin_df)
+```
