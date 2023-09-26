@@ -21,7 +21,7 @@ First, clean the data in pols-month.csv. Use `separate()` to break up the variab
 
 ```{r pols_month}
 pols_month_df = 
-  read_csv("fivethirtyeight_datasets/pols-month.csv") |>
+  read_csv("data/fivethirtyeight_datasets/pols-month.csv") |>
   janitor::clean_names() |>
   separate(mon, into = c("year", "month", "day"), sep = "-") |>
   mutate(month = month.name[as.numeric(month)]) |>
@@ -36,7 +36,7 @@ Second, clean the data in snp.csv using a similar process to the above. For cons
 
 ```{r snp}
 snp_df = 
-  read_csv("fivethirtyeight_datasets/snp.csv") |>
+  read_csv("data/fivethirtyeight_datasets/snp.csv") |>
   janitor::clean_names() |>
   separate(date, into = c("month", "day", "year"), sep = "/") |>
   mutate(month = month.name[as.numeric(month)],
@@ -52,7 +52,7 @@ Third, tidy the unemployment data so that it can be merged with the previous dat
 
 ```{r unemployment}
 unemployment_df = 
-  read_csv("fivethirtyeight_datasets/unemployment.csv") |>
+  read_csv("data/fivethirtyeight_datasets/unemployment.csv") |>
   janitor::clean_names() |>
   pivot_longer(jan:dec, 
                names_to = "month", 
@@ -126,7 +126,7 @@ The file “unemployment” contains 68 observations of 13 variables:
 
 Using the code chunk below to further describe the resulting dataset:
 
-```{r describe}
+```{r describe_1}
 skimr::skim(problem1_df)
 ```
 
@@ -135,3 +135,23 @@ The merged dataset contains `r dim(problem1_df)[1]` observations of `r dim(probl
 The variable `year` included in this dataset ranges from `r range(problem1_df$year)[1]` to `r range(problem1_df$year)[2]`.
 
 The names of some key variables in the dataset include: `r names(problem1_df)`.
+
+# Problem 2
+
+## import and tidy Mr. Trash Wheel
+
+Read and clean the Mr. Trash Wheel sheet:
+
+* specify the sheet in the Excel file and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in read_excel
+* use reasonable variable names
+* omit rows that do not include dumpster-specific data
+
+```{r mr_wheel_trash}
+mr_wheel_trash_df = 
+  readxl::read_excel("data/trash_wheel_datasets/Trash Wheel Collection Data.xlsx",
+                     sheet = "Mr. Trash Wheel",
+                     range = "A2:N550") |>
+  janitor::clean_names() |>
+  drop_na(dumpster)
+```
+
