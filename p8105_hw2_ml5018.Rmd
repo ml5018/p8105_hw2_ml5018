@@ -11,6 +11,7 @@ Load the package to be used for data processing.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
+options(tibble.print_min = 5)
 ```
 
 # Problem 1
@@ -28,6 +29,8 @@ pols_month_df =
   mutate(president = prez_gop - prez_dem,
          president = case_match(president, 1  ~ "gop", -1 ~ "dem")) |>
   select(-prez_dem, -prez_gop,-day)
+
+pols_month_df
 ```
 
 ## snp
@@ -44,6 +47,8 @@ snp_df =
          year = as.character(case_when(year >= 23 ~ year + 1900,
                           year <  23 ~ year + 2000))) |>
   arrange(year, month)
+
+snp_df
 ```
 
 ## unemployment
@@ -73,6 +78,8 @@ unemployment_df =
                         dec = "December"
                         )
          )
+
+unemployment_df
 ```
 
 ## join datasets
@@ -83,6 +90,8 @@ Join the datasets by merging `snp` into `pols`, and merging `unemployment` into 
 problem1_df = 
   left_join(pols_month_df, snp_df) |>
   left_join(unemployment_df)
+
+problem1_df
 ```
 
 ## describe datasets
@@ -153,6 +162,8 @@ mr_wheel_trash_df =
                      range = "A2:N550") |>
   janitor::clean_names() |>
   drop_na(dumpster)
+
+mr_wheel_trash_df
 ```
 
 ## update Mr. Trash Wheel
@@ -164,6 +175,8 @@ The data include a column for the (approximate) number of homes powered. This ca
 ```{r update}
 mr_wheel_trash_df = mutate(mr_wheel_trash_df,
                            homes_powered = weight_tons * 500 / 30)
+
+mr_wheel_trash_df
 ```
 
 ## tidy and process more data
@@ -172,6 +185,8 @@ Use a similar process to import, clean, and organize the data for Professor Tras
 
 ```{r more_data}
 mr_wheel_trash_df = mutate(mr_wheel_trash_df, trash_wheel = "mr")
+
+mr_wheel_trash_df
 
 professor_wheel_trash_df = 
   readxl::read_excel("data/trash_wheel_datasets/Trash Wheel Collection Data.xlsx",
@@ -183,6 +198,8 @@ professor_wheel_trash_df =
          trash_wheel = "professor",
          year = as.character(year))
 
+professor_wheel_trash_df
+
 gwynnda_df = 
   readxl::read_excel("data/trash_wheel_datasets/Trash Wheel Collection Data.xlsx",
                      sheet = "Gwynnda Trash Wheel",
@@ -193,9 +210,13 @@ gwynnda_df =
          trash_wheel = "gwynnda",
          year = as.character(year))
 
+gwynnda_df
+
 problem2_df = 
   full_join(mr_wheel_trash_df, professor_wheel_trash_df) |>
   full_join(gwynnda_df)
+
+problem2_df
 ```
 
 ## describe the dataset
@@ -233,6 +254,8 @@ mci_baseline_df =
            ) |>
   janitor::clean_names() |>
   drop_na(age_at_onset)
+
+mci_baseline_df
 ```
 
 Some important steps in the process include skipping the first row which contains no variavle names or values but notes, setting the variable type of some specific columns, and converting missing values to `NA` before dropping the rows containing them.
@@ -273,9 +296,11 @@ mci_amyloid_df =
            ) |>
   janitor::clean_names() |>
   rename(id = study_id)
+
+mci_amyloid_df
 ```
 
-The main step in import process is to skip the first row to avoid notes.
+The main step in import process is to skip the first row to avoid notes. And for future merging of datasets, convert the variable name to the same.
 
 The dataset contains `r nrow(mci_amyloid_df)` rows and `r ncol(mci_amyloid_df)` columns, the main variables of which include: `r names(mci_amyloid_df)`.
 
@@ -287,14 +312,24 @@ Apply `anti_join` function to see the rows contained only in baseline dataset.
 
 ```{r antijoin1}
 antijoin1_origin_df = anti_join(baseline_origin_df, mci_amyloid_df)
+
+antijoin1_origin_df
+
 antijoin1_df = anti_join(mci_baseline_df, mci_amyloid_df)
+
+antijoin1_df
 ```
 
 Similarly, use the code below for the rows contained only in amyloid dataset.
 
 ```{r antijoin2}
 antijoin2_origin_df = anti_join(mci_amyloid_df, baseline_origin_df)
+
+antijoin2_origin_df
+
 antijoin2_df = anti_join(mci_amyloid_df, mci_baseline_df)
+
+antijoin2_df
 ```
 
 Comparing the results of `anti_join` function, it can be seen that there are much more observations that only appear in the amyloid dataset, especially after filtering the baseline dataset with the inclusion criteria.
@@ -303,6 +338,9 @@ Use the function `inner_join` to combine the two datasets so that only participa
 
 ```{r innerjoin}
 innerjoin_df = inner_join(mci_baseline_df, mci_amyloid_df)
+
+innerjoin_df
+
 write_csv(innerjoin_df, "mci_combined.csv")
 ```
 
