@@ -279,3 +279,31 @@ The main step in import process is to skip the first row to avoid notes.
 
 The dataset contains `r nrow(mci_amyloid_df)` rows and `r ncol(mci_amyloid_df)` columns, the main variables of which include: `r names(mci_amyloid_df)`.
 
+## compare and join datasets
+
+Check whether some participants appear in only the baseline or amyloid datasets, and comment on your findings. Combine the demographic and biomarker datasets so that only participants who appear in both datasets are retained, and briefly describe the resulting dataset; export the result as a CSV to your data directory.
+
+Apply `anti_join` function to see the rows contained only in baseline dataset.
+
+```{r antijoin1}
+antijoin1_origin_df = anti_join(baseline_origin_df, mci_amyloid_df)
+antijoin1_df = anti_join(mci_baseline_df, mci_amyloid_df)
+```
+
+Similarly, use the code below for the rows contained only in amyloid dataset.
+
+```{r antijoin1}
+antijoin2_origin_df = anti_join(mci_amyloid_df, baseline_origin_df)
+antijoin2_df = anti_join(mci_amyloid_df, mci_baseline_df)
+```
+
+Comparing the results of `anti_join` function, it can be seen that there are much more observations that only appear in the amyloid dataset, especially after filtering the baseline dataset with the inclusion criteria.
+
+Use the function `inner_join` to combine the two datasets so that only participants who appear in both datasets will be retained. Then export the result and save it as a csv document.
+
+```{r innerjoin}
+innerjoin_df = inner_join(mci_baseline_df, mci_amyloid_df)
+write_csv(innerjoin_df, "mci_combined.csv")
+```
+
+The resulting dataset consists of `r nrow(innerjoin_df)` observations of `r ncol(innerjoin_df)` variables. The key variables include `r names(innerjoin_df)`.
