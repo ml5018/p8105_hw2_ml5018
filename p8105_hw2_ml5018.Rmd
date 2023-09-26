@@ -216,3 +216,49 @@ For available data, the total weight of trash collected by Professor Trash Wheel
 
 And the total number of cigarette butts collected by Gwynnda in July of 2021 is `r sum(pull(filter(problem2_df, year == 2021, month == "July", trash_wheel == "gwynnda"), 9))`.
 
+# Problem 3
+
+## import and tidy baseline data
+
+Import, clean, and tidy the dataset of baseline demographics. Ensure that sex and APOE4 carrier status are appropriate encoded (i.e. not numeric), and remove any participants who do not meet the stated inclusion criteria (i.e. no MCI at baseline). Discuss important steps in the import process and relevant features of the dataset. How many participants were recruited, and of these how many develop MCI? What is the average baseline age? What proportion of women in the study are APOE4 carriers?
+
+```{r baseline}
+mci_baseline_df = 
+  read_csv("data/data_mci/MCI_baseline.csv", 
+           skip = 1, 
+           col_types = cols(
+             Sex = col_factor(),
+             apoe4 = col_factor()),
+           na = c(".")
+           ) |>
+  janitor::clean_names() |>
+  drop_na(age_at_onset)
+```
+
+Some important steps in the process include skipping the first row which contains no variavle names or values but notes, setting the variable type of some specific columns, and converting missing values to `NA` before dropping the rows containing them.
+
+The original dataset consists of `r nrow(read_csv("data/data_mci/MCI_baseline.csv"))` observations of `r ncol(read_csv("data/data_mci/MCI_baseline.csv"))` variables. Some key variables include: `r names(read_csv("data/data_mci/MCI_baseline.csv"))`.
+
+After a primary filtering, the resulting dataset is composed by `r nrow(mci_baseline_df)` rows and `r ncol(mci_baseline_df)` columns.
+
+It can be concluded that `r nrow(read_csv("data/data_mci/MCI_baseline.csv"))` participants were recruited at the beginning of the study, and `r nrow(mci_baseline_df)` of them developed MCI during the track.
+
+Use the following code chunk to calculate the average baseline age and proportion of APOE4 carriers in women.
+
+```{r calculate}
+baseline_origin_df = 
+  read_csv("data/data_mci/MCI_baseline.csv",
+           skip = 1, 
+           col_types = cols(
+             Sex = col_factor(),
+             apoe4 = col_factor())) |>
+  janitor::clean_names()
+average_age = mean(baseline_origin_df$current_age)
+baseline_women_df = filter(baseline_origin_df, sex == 0)
+baseline_women_carrier_df = filter(baseline_women_df, apoe4 == 1)
+carrier_proportion = 
+  as.numeric((count(baseline_women_carrier_df) / count(baseline_women_df))[1])
+```
+
+Thus the average baseline age of the study is `average_age` years and `carrier_proportion * 100`% proportion of the women are APOE4 carriers.
+
