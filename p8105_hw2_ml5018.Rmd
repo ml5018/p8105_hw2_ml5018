@@ -13,3 +13,20 @@ Load the package to be used for data processing.
 library(tidyverse)
 ```
 
+# Problem 1
+
+## pols_month
+
+First, clean the data in pols-month.csv. Use `separate()` to break up the variable mon into integer variables `year`, `month`, and `day`; replace month number with month name; create a `president` variable taking values `gop` and `dem`, and remove `prez_dem` and `prez_gop`; and remove the `day` variable.
+
+```{r pols_month}
+pols_month_df = 
+  read_csv("fivethirtyeight_datasets/pols-month.csv") |>
+  janitor::clean_names() |>
+  separate(mon, into = c("year", "month", "day"), sep = "-") |>
+  mutate(month = month.name[as.numeric(month)]) |>
+  mutate(president = prez_gop - prez_dem,
+         president = case_match(president, 1  ~ "gop", -1 ~ "dem")) |>
+  select(-prez_dem, -prez_gop,-day)
+```
+
