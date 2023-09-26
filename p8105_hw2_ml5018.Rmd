@@ -262,3 +262,20 @@ carrier_proportion =
 
 Thus the average baseline age of the study is `average_age` years and `carrier_proportion * 100`% proportion of the women are APOE4 carriers.
 
+## import and process other data
+
+Similarly, import, clean, and tidy the dataset of longitudinally observed biomarker values; comment on the steps on the import process and the features of the dataset.
+
+```{r other_data}
+mci_amyloid_df = 
+  read_csv("data/data_mci/mci_amyloid.csv", 
+           skip = 1
+           ) |>
+  janitor::clean_names() |>
+  rename(id = study_id)
+```
+
+The main step in import process is to skip the first row to avoid notes.
+
+The dataset contains `r nrow(mci_amyloid_df)` rows and `r ncol(mci_amyloid_df)` columns, the main variables of which include: `r names(mci_amyloid_df)`.
+
