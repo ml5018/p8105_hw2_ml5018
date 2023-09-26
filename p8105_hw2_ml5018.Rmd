@@ -5,3 +5,11 @@ date: 2023-09-26
 output: github_document
 ---
 
+This is a R Markdown document for homework 2.
+
+Load the package to be used for data processing.
+
+```{r setup, message = FALSE}
+library(tidyverse)
+```
+
