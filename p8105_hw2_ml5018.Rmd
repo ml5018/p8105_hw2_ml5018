@@ -155,3 +155,46 @@ mr_wheel_trash_df =
   drop_na(dumpster)
 ```
 
+## update Mr. Trash Wheel
+
+The data include a column for the (approximate) number of homes powered. This calculation is described in the `Homes powered note`, but not applied to every row in the dataset. Update the data to include a new `homes_powered` variable based on this calculation.
+
+* Homes Powered - Each ton of trash equates to on average 500 kilowatts of electricity.  An average household will use 30 kilowatts per day.
+
+```{r update}
+mr_wheel_trash_df = mutate(mr_wheel_trash_df,
+                           homes_powered = weight_tons * 500 / 30)
+```
+
+## tidy and process more data
+
+Use a similar process to import, clean, and organize the data for Professor Trash Wheel and Gwynnda, and combine these with the Mr. Trash Wheel dataset to produce a single tidy dataset. To keep track of which Trash Wheel is which, you may need to add an additional variable to all datasets before combining.
+
+```{r more_data}
+mr_wheel_trash_df = mutate(mr_wheel_trash_df, trash_wheel = "mr")
+
+professor_wheel_trash_df = 
+  readxl::read_excel("data/trash_wheel_datasets/Trash Wheel Collection Data.xlsx",
+                     sheet = "Professor Trash Wheel",
+                     range = "A2:M97") |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(homes_powered = weight_tons * 500 / 30,
+         trash_wheel = "professor",
+         year = as.character(year))
+
+gwynnda_df = 
+  readxl::read_excel("data/trash_wheel_datasets/Trash Wheel Collection Data.xlsx",
+                     sheet = "Gwynnda Trash Wheel",
+                     range = "A2:K110") |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(homes_powered = weight_tons * 500 / 30,
+         trash_wheel = "gwynnda",
+         year = as.character(year))
+
+problem2_df = 
+  full_join(mr_wheel_trash_df, professor_wheel_trash_df) |>
+  full_join(gwynnda_df)
+```
+
