@@ -260,7 +260,7 @@ carrier_proportion =
   as.numeric((count(baseline_women_carrier_df) / count(baseline_women_df))[1])
 ```
 
-Thus the average baseline age of the study is `average_age` years and `carrier_proportion * 100`% proportion of the women are APOE4 carriers.
+Thus the average baseline age of the study is `r average_age` years and `r carrier_proportion * 100`% proportion of the women are APOE4 carriers.
 
 ## import and process other data
 
@@ -292,7 +292,7 @@ antijoin1_df = anti_join(mci_baseline_df, mci_amyloid_df)
 
 Similarly, use the code below for the rows contained only in amyloid dataset.
 
-```{r antijoin1}
+```{r antijoin2}
 antijoin2_origin_df = anti_join(mci_amyloid_df, baseline_origin_df)
 antijoin2_df = anti_join(mci_amyloid_df, mci_baseline_df)
 ```
