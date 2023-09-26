@@ -151,7 +151,7 @@ The names of some key variables in the dataset include: `r names(problem1_df)`.
 
 Read and clean the Mr. Trash Wheel sheet:
 
-* specify the sheet in the Excel file and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in read_excel
+* specify the sheet in the Excel file and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in `read_excel`
 * use reasonable variable names
 * omit rows that do not include dumpster-specific data
 
