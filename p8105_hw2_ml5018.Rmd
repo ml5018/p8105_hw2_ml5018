@@ -340,6 +340,8 @@ antijoin2_df = anti_join(mci_amyloid_df, mci_baseline_df)
 antijoin2_df
 ```
 
+It is obvious that there exist some participants that only appear in the basline dataset or the amyloid dataset, with both of the comparisons returning a tibble, no matter the baseline dataset to be used has been filtered or not.
+
 Comparing the results of `anti_join` function, it can be seen that there are much more observations that only appear in the amyloid dataset, especially after filtering the baseline dataset with the inclusion criteria.
 
 Use the function `inner_join` to combine the two datasets so that only participants who appear in both datasets will be retained. Then export the result and save it as a csv document.
