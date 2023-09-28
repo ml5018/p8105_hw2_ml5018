@@ -27,7 +27,8 @@ pols_month_df =
   separate(mon, into = c("year", "month", "day"), sep = "-") |>
   mutate(month = month.name[as.numeric(month)]) |>
   mutate(president = prez_gop - prez_dem,
-         president = case_match(president, 1  ~ "gop", -1 ~ "dem")) |>
+         president = case_match(president, 
+                                2 ~ "gop", 1  ~ "gop", -1 ~ "dem")) |>
   select(-prez_dem, -prez_gop,-day)
 
 pols_month_df
