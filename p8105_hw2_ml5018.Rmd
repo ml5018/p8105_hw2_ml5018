@@ -52,6 +52,24 @@ snp_df =
 snp_df
 ```
 
+Considering that the `close` variable stands for the closing value on the associate date, it might be better if we reserve the variable `day` to keep the dataset intact.
+
+Or, if we arrange the date first and then separate it into year, month and day, using the following code chunk we get the very same data frame as above:
+
+```{r alternative, eval = FALSE}
+snp_df_alter = 
+  read_csv("data/fivethirtyeight_datasets/snp.csv") |>
+  janitor::clean_names() |>
+  mutate(date = as.Date(date, format = "%m/%d/%y"),
+         date = ifelse(date > Sys.Date(),
+                       format(date, "19%y-%m-%d"),
+                       format(date))) |>
+  separate(date, into = c("year", "month", "day"), sep = "-") |>
+  mutate(month = month.name[as.numeric(month)],
+         year = as.numeric(year)) |>
+  arrange(year, month)
+```
+
 ## unemployment
 
 Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
@@ -93,6 +111,16 @@ problem1_df =
   left_join(unemployment_df)
 
 problem1_df
+```
+
+We may also remove the `day` variable from `snp_df` before merging it, depending on the usage of the results, as shown in the code chunk below:
+
+```{r remove_join, eval = FALSE}
+snp_df_rm = select(snp_df, -day)
+
+problem1_df_rm = 
+  left_join(pols_month_df, snp_df_rm) |>
+  left_join(unemployment_df)
 ```
 
 ## describe datasets
