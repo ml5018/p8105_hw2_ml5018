@@ -222,7 +222,7 @@ mr_wheel_trash_df
 professor_wheel_trash_df = 
   readxl::read_excel("data/trash_wheel_datasets/202309 Trash Wheel Collection Data.xlsx",
                      sheet = "Professor Trash Wheel",
-                     range = "A2:M97") |>
+                     range = "A2:M109") |>
   janitor::clean_names() |>
   drop_na(dumpster) |>
   mutate(homes_powered = weight_tons * 500 / 30,
@@ -234,7 +234,7 @@ professor_wheel_trash_df
 gwynnda_df = 
   readxl::read_excel("data/trash_wheel_datasets/202309 Trash Wheel Collection Data.xlsx",
                      sheet = "Gwynnda Trash Wheel",
-                     range = "A2:K110") |>
+                     range = "A2:L159") |>
   janitor::clean_names() |>
   drop_na(dumpster) |>
   mutate(homes_powered = weight_tons * 500 / 30,
