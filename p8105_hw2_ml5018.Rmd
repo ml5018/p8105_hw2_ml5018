@@ -172,7 +172,7 @@ skimr::skim(problem1_df)
 
 The merged dataset contains `r dim(problem1_df)[1]` observations of `r dim(problem1_df)[2]` variables.
 
-The variable `year` included in this dataset ranges from `r range(problem1_df$year)[1]` to `r range(problem1_df$year)[2]`.
+The variable `year` included in this dataset ranges from `r range(pull(problem1_df, var = 1))[1]` to `r range(pull(problem1_df, var = 1))[2]`.
 
 The names of some key variables in the dataset include: `r names(problem1_df)`.
 
@@ -313,7 +313,7 @@ baseline_origin_df =
              Sex = col_factor(),
              apoe4 = col_factor())) |>
   janitor::clean_names()
-average_age = mean(baseline_origin_df$current_age)
+average_age = mean(pull(baseline_origin_df,var = 2))
 baseline_women_df = filter(baseline_origin_df, sex == 0)
 baseline_women_carrier_df = filter(baseline_women_df, apoe4 == 1)
 carrier_proportion = 
