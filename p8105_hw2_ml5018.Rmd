@@ -343,6 +343,21 @@ The main step in import process is to skip the first row to avoid notes. And for
 
 The dataset contains `r nrow(mci_amyloid_df)` rows and `r ncol(mci_amyloid_df)` columns, the main variables of which include: `r names(mci_amyloid_df)`.
 
+If required, we can also use `pivot_longer` function to further tidy the dataset into a longer form, the code chunk to achieve which shown as follow:
+
+```{r pivot}
+mci_amyloid_longer_df = 
+  mci_amyloid_df |> 
+    pivot_longer(
+    time_2:time_8,
+    names_to = "time",
+    names_prefix = "time_",
+    values_to = "ratio"
+  )
+
+mci_amyloid_longer_df
+```
+
 ## compare and join datasets
 
 Check whether some participants appear in only the baseline or amyloid datasets, and comment on your findings. Combine the demographic and biomarker datasets so that only participants who appear in both datasets are retained, and briefly describe the resulting dataset; export the result as a CSV to your data directory.
@@ -357,6 +372,10 @@ antijoin1_origin_df
 antijoin1_df = anti_join(mci_baseline_df, mci_amyloid_df)
 
 antijoin1_df
+
+antijoin1_longer_df = anti_join(baseline_origin_df, mci_amyloid_longer_df)
+
+antijoin1_longer_df
 ```
 
 Similarly, use the code below for the rows contained only in amyloid dataset.
@@ -369,11 +388,15 @@ antijoin2_origin_df
 antijoin2_df = anti_join(mci_amyloid_df, mci_baseline_df)
 
 antijoin2_df
+
+antijoin2_longer_df = anti_join(mci_amyloid_longer_df, baseline_origin_df)
+
+antijoin2_longer_df
 ```
 
 It is obvious that there exist some participants that only appear in the basline dataset or the amyloid dataset, with both of the comparisons returning a tibble, no matter the baseline dataset to be used has been filtered or not.
 
-Comparing the results of `anti_join` function, it can be seen that there are much more observations that only appear in the amyloid dataset, especially after filtering the baseline dataset with the inclusion criteria.
+Comparing the results of `anti_join` function, it can be seen that there are much more observations that only appear in the amyloid dataset, especially after filtering the baseline dataset with the inclusion criteria. When using baseline dataset as the first input for `anti_join`, the resulting data frames were the same na matter the form of amyloid dataset was longer or wider. Yet when using amyloid as the first input, the resulting data frames differed due to the different forms of amyloid.
 
 Use the function `inner_join` to combine the two datasets so that only participants who appear in both datasets will be retained. Then export the result and save it as a csv document.
 
@@ -392,3 +415,17 @@ Further descriptive information can be obtained using the code chunk below.
 ```{r describe_3}
 skimr::skim(innerjoin_df)
 ```
+
+If we use the longer form of amyloid to do the process above:
+
+```{r longer}
+innerjoin_longer_df = inner_join(mci_baseline_df, mci_amyloid_longer_df)
+
+innerjoin_longer_df
+
+write_csv(innerjoin_longer_df, "mci_combined_longer.csv")
+
+skimr::skim(innerjoin_longer_df)
+```
+
+The resulting dataset consists of `r nrow(innerjoin_longer_df)` observations of `r ncol(innerjoin_longer_df)` variables. The key variables include `r names(innerjoin_longer_df)`.
