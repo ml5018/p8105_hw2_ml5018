@@ -286,7 +286,7 @@ mci_baseline_df =
            na = c(".")
            ) |>
   janitor::clean_names() |>
-  filter(current_age <= age_at_onset | is.na(age_at_onset))
+  filter(current_age < age_at_onset | is.na(age_at_onset))
 
 mci_baseline_df
 ```
@@ -301,7 +301,7 @@ The original dataset consists of `r nrow(read_csv("data/data_mci/MCI_baseline.cs
 
 After a primary filtering, the resulting dataset is composed by `r nrow(mci_baseline_df)` rows and `r ncol(mci_baseline_df)` columns.
 
-It can be concluded that `r nrow(read_csv("data/data_mci/MCI_baseline.csv"))` participants were recruited at the beginning of the study, and `r nrow(mci_baseline_df)` of them developed MCI during the track.
+It can be concluded that `r nrow(read_csv("data/data_mci/MCI_baseline.csv"))` participants were recruited at the beginning of the study, `r nrow(mci_baseline_df)` of which met the criteria and `r nrow(filter(mci_baseline_df, is.na(age_at_onset) == FALSE))` of them developed MCI during the track.
 
 Use the following code chunk to calculate the average baseline age and proportion of APOE4 carriers in women.
 
@@ -309,27 +309,45 @@ Use the following code chunk to calculate the average baseline age and proportio
 baseline_origin_df = 
   read_csv("data/data_mci/MCI_baseline.csv",
            skip = 1, 
+           na = ".",
            col_types = cols(
              Sex = col_factor(),
              apoe4 = col_factor())) |>
   janitor::clean_names()
-average_age = mean(pull(baseline_origin_df,var = 2))
+average_age_current = 
+  baseline_origin_df |>
+  pull(var = 2) |>
+  mean()
+average_age_onset = 
+  baseline_origin_df |>
+  filter(is.na(age_at_onset) == FALSE) |>
+  pull(var = 6) |>
+  mean()
 baseline_women_df = filter(baseline_origin_df, sex == 0)
 baseline_women_carrier_df = filter(baseline_women_df, apoe4 == 1)
 carrier_proportion = 
   as.numeric((count(baseline_women_carrier_df) / count(baseline_women_df))[1])
 ```
 
-Thus the average baseline age of the study is `r average_age` years and `r carrier_proportion * 100`% proportion of the women are APOE4 carriers.
+Thus the average baseline age of the study is `r average_age_current` years(current) or `r average_age_onset` years(onset) and `r carrier_proportion * 100`% proportion of the women are APOE4 carriers.
 
 ```{r filtered}
+average_age_current_filtered = 
+  mci_baseline_df |>
+  pull(var = 2) |>
+  mean()
+average_age_onset_filtered = 
+  mci_baseline_df |>
+  filter(is.na(age_at_onset) == FALSE) |>
+  pull(var = 6) |>
+  mean()
 filtered_women_df = filter(mci_baseline_df, sex == 0)
 filtered_women_carrier_df = filter(filtered_women_df, apoe4 == 1)
 carrier_proportion_filtered = 
   as.numeric((count(filtered_women_carrier_df) / count(filtered_women_df))[1])
 ```
 
-As shown above, if we exclude the subjects that did not meet the criteria for baseline study, then the average baseline age will be `r mean(pull(mci_baseline_df, var = 2))` years and the proportion of APOE4 carriers in women will be `r carrier_proportion_filtered * 100`%.
+As shown above, if we exclude the subjects that did not meet the criteria for baseline study, then the average baseline age will be `r average_age_current_filtered` years(current) or `r average_age_onset_filtered` years(onset) and the proportion of APOE4 carriers in women will be `r carrier_proportion_filtered * 100`%.
 
 ## import and process other data
 
