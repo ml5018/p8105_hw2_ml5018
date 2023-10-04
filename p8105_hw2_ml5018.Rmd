@@ -322,6 +322,15 @@ carrier_proportion =
 
 Thus the average baseline age of the study is `r average_age` years and `r carrier_proportion * 100`% proportion of the women are APOE4 carriers.
 
+```{r filtered}
+filtered_women_df = filter(mci_baseline_df, sex == 0)
+filtered_women_carrier_df = filter(filtered_women_df, apoe4 == 1)
+carrier_proportion_filtered = 
+  as.numeric((count(filtered_women_carrier_df) / count(filtered_women_df))[1])
+```
+
+As shown above, if we exclude the subjects that did not meet the criteria for baseline study, then the average baseline age will be `r mean(pull(mci_baseline_df, var = 2))` years and the proportion of APOE4 carriers in women will be `r carrier_proportion_filtered * 100`%.
+
 ## import and process other data
 
 Similarly, import, clean, and tidy the dataset of longitudinally observed biomarker values; comment on the steps on the import process and the features of the dataset.
