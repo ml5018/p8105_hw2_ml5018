@@ -115,7 +115,7 @@ problem1_df
 
 Since there are no corresponding variables to it in the other two datasets, we may also remove the `day` variable from `snp_df` before merging it, depending on the usage of the results, as shown in the code chunk below:
 
-```{r remove_join, eval = FALSE}
+```{r remove_join}
 snp_df_rm = select(snp_df, -day)
 
 problem1_df_rm = 
