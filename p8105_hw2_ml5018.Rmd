@@ -286,7 +286,7 @@ mci_baseline_df =
            na = c(".")
            ) |>
   janitor::clean_names() |>
-  drop_na(age_at_onset)
+  filter(current_age <= age_at_onset | is.na(age_at_onset))
 
 mci_baseline_df
 ```
